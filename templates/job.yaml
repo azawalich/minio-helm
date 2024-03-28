@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: minio-make-bucket-job
+  namespace: f1-platform
+spec:
+  template:
+    spec:
+      containers:
+      - name: minio-make-bucket
+        image: docker.io/minio/mc:RELEASE.2024-03-25T16-41-14Z
+        command: ["/bin/sh", "-c"]
+        # TODO: move these into secrets
+        args: ["echo 'Sleeping for 90 seconds...'; sleep 90; mc alias set minio http://minio-service:9000 minio_user minio_password; mc mb minio/mlflow"]
+      restartPolicy: Never
+  backoffLimit: 0

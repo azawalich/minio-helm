@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minio-deployment
+  namespace: f1-platform
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minio-s3
+  template:
+    metadata:
+      labels:
+        app: minio-s3
+    spec:
+      containers:
+      - name: minio-s3
+        image: docker.io/minio/minio:RELEASE.2023-10-24T04-42-36Z.hotfix.0c51d76bb
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9000
+        - containerPort: 9001
+        livenessProbe:
+          tcpSocket:
+            port: 9000
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        readinessProbe:
+          tcpSocket:
+            port: 9000
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        env:
+        # TODO: move these into secrets
+        - name: MINIO_ROOT_USER
+          value: minio_user
+        - name: MINIO_ROOT_PASSWORD
+          value: minio_password
+        - name: MINIO_STORAGE_USE_HTTPS
+          value: "False"
+        command: ["minio", "server"]
+        args: ["/data", "--console-address", ":9001"]
