@@ -31,7 +31,8 @@ spec:
           initialDelaySeconds: 15
           periodSeconds: 10
         env:
-        # TODO: move these into secrets
+        #TODO: add PVC because the data is lost after restart of a service 
+        #TODO: move these into secrets
         - name: MINIO_ROOT_USER
           value: minio_user
         - name: MINIO_ROOT_PASSWORD
