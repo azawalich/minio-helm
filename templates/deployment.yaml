@@ -32,12 +32,17 @@ spec:
           periodSeconds: 10
         env:
         #TODO: add PVC because the data is lost after restart of a service 
-        #TODO: move these into secrets
-        - name: MINIO_ROOT_USER
-          value: minio_user
-        - name: MINIO_ROOT_PASSWORD
-          value: minio_password
         - name: MINIO_STORAGE_USE_HTTPS
           value: "False"
+        - name: MINIO_ROOT_USER
+          valueFrom:
+            secretKeyRef:
+              name: minio-dashboard-secret
+              key: username
+        - name: MINIO_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: minio-dashboard-secret
+              key: password
         command: ["minio", "server"]
         args: ["/data", "--console-address", ":9001"]

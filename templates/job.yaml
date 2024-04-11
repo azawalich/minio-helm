@@ -7,10 +7,42 @@ spec:
   template:
     spec:
       containers:
-      - name: minio-make-bucket
-        image: docker.io/minio/mc:RELEASE.2024-03-25T16-41-14Z
+      - name: minio-make-buckets
+        image: docker.io/minio/mc:RELEASE.2024-03-30T15-29-52Z
         command: ["/bin/sh", "-c"]
-        # TODO: move these into secrets
-        args: ["echo 'Sleeping for 90 seconds...'; sleep 90; mc alias set minio http://minio-service:9000 minio_user minio_password; mc mb minio/mlflow"]
+        env:
+        - name: MINIO_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: minio-dashboard-secret
+              key: username
+        - name: MINIO_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: minio-dashboard-secret
+              key: password
+        - name: ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: minio-dashboard-secret
+              key: access_key
+        - name: ACCESS_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: minio-dashboard-secret
+              key: secret_key
+        - name: NEW_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: minio-dashboard-secret
+              key: new_username
+        - name: NEW_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: minio-dashboard-secret
+              key: new_password
+        args: ["echo 'Sleeping for 90 seconds...'; sleep 90; mc alias set minio http://minio-service:9000 $(MINIO_USERNAME) $(MINIO_PASSWORD); mc admin user add minio $(NEW_USERNAME) $(NEW_PASSWORD); mc admin policy attach minio readwrite --user $(NEW_USERNAME); mc admin user svcacct add --access-key $(ACCESS_KEY) --secret-key $(ACCESS_SECRET) minio $(NEW_USERNAME); mc mb minio/mlflow; mc mb minio/classify; mc mb minio/recognize;"]
       restartPolicy: Never
   backoffLimit: 0
+  #
+  
