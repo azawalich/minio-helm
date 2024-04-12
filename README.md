@@ -76,6 +76,11 @@ You can view the list of minikube maintainers at: https://github.com/kubernetes/
 # Example
 ## Homepage
 ![sample image](./images/minio-homepage.png)
-
-## Bucket
-![sample image 2](./images/minio-bucket.png)
+## Buckets
+![sample image 2](./images/minio-buckets.png)
+### MLFlow
+![sample image 3](./images/minio-mlflow.png)
+### Classify
+![sample image 4](./images/minio-classify.png)
+### Recognize
+![sample image 5](./images/minio-recognize.png)
