@@ -2,7 +2,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: minio-dashboard-deployment
-  namespace: f1-platform
+  labels:
+    app: f1-platform
+    component: pygwalker
 spec:
   replicas: 1
   selector:

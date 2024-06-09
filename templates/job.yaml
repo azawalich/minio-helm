@@ -2,7 +2,9 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: minio-make-bucket-job
-  namespace: f1-platform
+  labels:
+    app: f1-platform
+    component: minio
 spec:
   template:
     spec:
